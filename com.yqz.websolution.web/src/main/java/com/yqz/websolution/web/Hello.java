@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.servlet.DispatcherServlet;
+
 import com.yqz.websolution.service.HelloService;
 
 public class Hello extends HttpServlet {
