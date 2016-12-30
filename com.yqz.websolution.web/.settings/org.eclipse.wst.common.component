@@ -7,6 +7,9 @@
         <dependent-module archiveName="service-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/com.yqz.websolution.service/com.yqz.websolution.service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="com.yqz.websolution.model-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/com.yqz.websolution.model/com.yqz.websolution.model">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/com.yqz.websolution.web/target/classes"/>
         <property name="context-root" value="web"/>
     </wb-module>

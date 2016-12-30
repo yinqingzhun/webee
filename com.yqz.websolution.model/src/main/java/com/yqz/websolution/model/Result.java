@@ -1,5 +1,11 @@
-package com.yqz.websolution.web.model;
+package com.yqz.websolution.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+import com.fasterxml.jackson.dataformat.xml.annotation.*;
+
+@JacksonXmlRootElement(localName = "root")
 public class Result<T> {
 
 	private int code;

@@ -1,5 +1,7 @@
 package com.yqz.websolution.web.controller;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,7 +28,7 @@ public class HomeController {
 		return "hello";
 	}
 
-	@RequestMapping(value = "/home/welcome/{name:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/home/Welcome/{name:.+}", method = RequestMethod.GET)
 	public ModelAndView hello(@PathVariable("name") String name) {
 
 		ModelAndView model = new ModelAndView();
@@ -35,6 +37,11 @@ public class HomeController {
 
 		return model;
 
+	}
+
+	public ResponseEntity<?> method(HttpEntity<String> entity) {
+
+		return ResponseEntity.noContent().build();
 	}
 
 }
