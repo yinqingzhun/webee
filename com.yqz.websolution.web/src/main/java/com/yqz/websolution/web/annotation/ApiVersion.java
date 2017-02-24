@@ -13,5 +13,5 @@ public @interface ApiVersion {
 
 	int value() default 1;
 	
-	int order() default 0;
+	int weight() default 0;
 }

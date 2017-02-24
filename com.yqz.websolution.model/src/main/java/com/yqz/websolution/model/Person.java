@@ -1,12 +1,22 @@
 package com.yqz.websolution.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
 
 public class Person {
 	private int age;
 	private String name;
 	private Sex sex;
+	private Date birthday;
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
 
 	public int getAge() {
 		return age;

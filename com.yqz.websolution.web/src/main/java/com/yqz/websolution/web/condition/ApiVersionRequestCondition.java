@@ -39,7 +39,7 @@ public final class ApiVersionRequestCondition extends AbstractRequestCondition<A
 	public ApiVersionRequestCondition getMatchingCondition(HttpServletRequest request) {
 		UrlPathHelper urlPathHelper = new UrlPathHelper();
 		String url = urlPathHelper.getLookupPathForRequest(request);
-		Pattern regex = Pattern.compile("\\/?(\\d{1,2})");
+		Pattern regex = Pattern.compile("^\\/?(\\d{1,2})");
 		Matcher m = regex.matcher(url);
 		int version = 0;
 		if (m.find()) {
@@ -49,7 +49,7 @@ public final class ApiVersionRequestCondition extends AbstractRequestCondition<A
 		}
 
 		ApiVersionExpression annotationVersion = getMaxApiVersionExpression(this.versions);
-		if (version >= annotationVersion.version)
+		if (version == annotationVersion.version)
 			return new ApiVersionRequestCondition(annotationVersion);
 
 		return null;
@@ -57,7 +57,7 @@ public final class ApiVersionRequestCondition extends AbstractRequestCondition<A
 
 	private ApiVersionExpression getMaxApiVersionExpression(Collection<ApiVersionExpression> collection) {
 		Optional<ApiVersionExpression> m = this.versions.stream().max(ApiVersionExpression::compareTo);
-		if (m == null)
+		if (!m.isPresent())
 			return null;
 		return m.get();
 	}
@@ -90,11 +90,11 @@ public final class ApiVersionRequestCondition extends AbstractRequestCondition<A
 
 	public static class ApiVersionExpression implements Comparable<ApiVersionExpression> {
 		private int version;
-		private int order;
+		private int weight;
 
 		public ApiVersionExpression(int version, int order) {
 			this.version = version;
-			this.order = order;
+			this.weight = order;
 		}
 
 		public int getVersion() {
@@ -105,21 +105,21 @@ public final class ApiVersionRequestCondition extends AbstractRequestCondition<A
 			this.version = version;
 		}
 
-		public int getOrder() {
-			return order;
+		public int getWeight() {
+			return weight;
 		}
 
-		public void setOrder(int order) {
-			this.order = order;
+		public void setWeight(int order) {
+			this.weight = order;
 		}
 
 		@Override
 		public int compareTo(ApiVersionExpression o) {
-			if (this.order != o.order)
-				return this.order - o.order;
-			else if (this.version != o.version)
-				return this.version - o.version;
-			return 0;
+			if (this.weight == o.weight)
+				return this.weight - o.weight;
+			else if(this.weight > o.weight)
+				return 1;
+			return -1;
 		}
 
 	}

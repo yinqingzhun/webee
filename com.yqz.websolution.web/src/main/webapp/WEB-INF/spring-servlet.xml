@@ -13,6 +13,8 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
+
+
 	<bean id="viewResolver" name="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/"></property>
@@ -24,4 +26,11 @@
 	</bean>
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	<mvc:annotation-driven></mvc:annotation-driven>
+	<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location">
+			<list>
+				<value>classpath:value.properties</value>
+			</list>
+		</property>
+	</bean>
 </beans>

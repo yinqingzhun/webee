@@ -8,18 +8,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.yqz.websolution.service.HelloService;
 
 public class Hello extends HttpServlet {
+	@Autowired
+	HelloService helloService;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		PrintWriter writer = resp.getWriter();
-		HelloService hs = new HelloService();
-		writer.write(hs.getWords());
+		writer.write(helloService.getWords());
 		writer.flush();
 		writer.close();
 	}

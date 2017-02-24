@@ -17,8 +17,10 @@ import com.yqz.websolution.model.exception.UnAuthenticationException;
 
 @Controller
 public class HomeController {
-	@Value("${jdbc.jdbcUrl}")
+	@Value("${jdbc.jdbcUrl:not exists}")
 	private String mysqlUrl;
+	@Value("#")
+	private String appName;
 
 	@RequestMapping(value = { "/home/index", "/" }, method = RequestMethod.GET)
 	public String Index(Model model) {

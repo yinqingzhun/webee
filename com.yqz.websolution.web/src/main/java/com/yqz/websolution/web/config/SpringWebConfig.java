@@ -1,6 +1,8 @@
 package com.yqz.websolution.web.config;
 
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer;
@@ -16,6 +18,7 @@ import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConvert
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -32,6 +35,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
@@ -40,7 +44,7 @@ import com.yqz.websolution.web.annotation.ApiVersion;
 import com.yqz.websolution.web.condition.ApiVersionRequestCondition;
 import com.yqz.websolution.web.condition.ApiVersionRequestCondition.ApiVersionExpression;
 import com.yqz.websolution.web.handler.SignatureHandlerInterceptor;
-
+@PropertySource("classpath:database.properties")
 @Configuration
 @ComponentScan(value = "com.yqz.websolution.web", useDefaultFilters = false, includeFilters = {
 		@Filter(type = FilterType.ANNOTATION, classes = { Controller.class }) })
@@ -65,7 +69,7 @@ public class SpringWebConfig extends WebMvcConfigurationSupport {
 				ApiVersion v = AnnotationUtils.findAnnotation(method, ApiVersion.class);
 				if (v == null)
 					return null;
-				return new ApiVersionRequestCondition(new ApiVersionExpression(v.value(), v.order()));
+				return new ApiVersionRequestCondition(new ApiVersionExpression(v.value(), v.weight()));
 			}
 
 			@Override
@@ -73,7 +77,7 @@ public class SpringWebConfig extends WebMvcConfigurationSupport {
 				ApiVersion v = AnnotationUtils.findAnnotation(handlerType, ApiVersion.class);
 				if (v == null)
 					return null;
-				return new ApiVersionRequestCondition(new ApiVersionExpression(v.value(), v.order()));
+				return new ApiVersionRequestCondition(new ApiVersionExpression(v.value(), v.weight()));
 			}
 		};
 		AntPathMatcher pathMatcher = new AntPathMatcher();
@@ -86,7 +90,8 @@ public class SpringWebConfig extends WebMvcConfigurationSupport {
 	@Bean
 	public PreferencesPlaceholderConfigurer preferencesPlaceholderConfigurer() {
 		PreferencesPlaceholderConfigurer c = new PreferencesPlaceholderConfigurer();
-		c.setLocations(new ClassPathResource("database.properties"));
+		c.setNullValue("@null");
+		//c.setLocations(new ClassPathResource("database.properties"));
 		return c;
 	}
 
@@ -109,15 +114,17 @@ public class SpringWebConfig extends WebMvcConfigurationSupport {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
 		objectMapper.disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+//		objectMapper.configOverride(java.util.Date.class)
+//	       .setFormat(JsonFormat.Value.forPattern("yyyy-MM-dd"));
 		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
-
+		
+		
 		JacksonXmlModule module = new JacksonXmlModule();
-		// and then configure, for example:
 		module.setDefaultUseWrapper(false);
 		XmlMapper xmlMapper = new XmlMapper(module);
-
+		xmlMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		converters.add(new MappingJackson2XmlHttpMessageConverter(xmlMapper));
-		// converters.add(new Jaxb2RootElementHttpMessageConverter());
 	}
 
 }
